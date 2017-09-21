@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Root } from "native-base";
 import ListView from './src/ListView';
+import Main from './src/Main';
 var { Provider } = require('react-redux');
 
 var configureStore = require('./src/store/configureStore');
 
-export default class Root extends React.Component {
+export default class RootApp extends React.Component {
   state: {
     isLoading: boolean;
     store: any;
@@ -15,32 +17,40 @@ export default class Root extends React.Component {
     super();
     this.state = {
       isLoading: true,
-      store: configureStore(() => this.setState({isLoading: false})),
+      store: configureStore(() => {}),
     };
   }
+
+
+  async componentDidMount() {
+    await Expo.Font.loadAsync({
+        'Roboto': require('native-base/Fonts/Roboto.ttf'),
+        'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    });
+
+    this.setState({isLoading: false})
+}
+
   render() {
     if (this.state.isLoading) {
       return null;
     }
     return (
-
-      <Provider store={this.state.store}>
-        <View style={styles.container}>
-          <ListView />
-        </View>
-      </Provider>
+      <Root>
+        <Main />
+      </Root>
+      // <Provider store={this.state.store}>
+      //   <Main />
+      // </Provider>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: 30,
-    paddingBottom: 10,
-    paddingLeft: 2,
-    paddingRight: 2,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: "#FFF"
+  },
+  mb10: {
+    marginBottom: 10
   }
 });
